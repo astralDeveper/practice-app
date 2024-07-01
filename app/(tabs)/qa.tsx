@@ -1,135 +1,110 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { qa } from "../../constants/qa";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useCallback, useState } from "react";
 import Slider from "@react-native-community/slider";
-import KeepMountedModal from "../../components/keepMountedModal";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import useModal from "../../hooks/useModal";
-const QA: React.FC = () => {
-  const [progress, setProgress] = useState<number>(0);
-  const [tempProgress, setTempProgress] = useState<number>(0);
-  const [open, setOpen] = useState<boolean>(false);
-  const { isShowing, toggle } = useModal();
-  const navigation = useNavigation<NavigationProp<any>>();
+import { qa } from "@/constants/qa";
 
-  const handleProgressChange = (value: number) => {
-    const newProgress = Math.min(Math.max(0, value), 100); // Ensures value stays between 0-100
-    setTempProgress(newProgress);
+const qa1 = () => {
+  const [progress, setProgress] = useState(0);
+
+  const handleProgressChange = (value: any) => {
+    if (value < 0) {
+      setProgress(0);
+    } else {
+      setProgress(value);
+    }
   };
 
   const handleSubmit = () => {
-    setProgress(tempProgress);
-    console.log(tempProgress);
-    navigation.navigate("Image");
-    // Send tempProgress to the backend here
-    // Example of sending data to the backend
-    // fetch('/api/submit-progress', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({ progress: tempProgress })
-    // });
-  };
-
-  const openModal = () => {
-    setOpen(true);
-  };
-
-  const handleOutsideClick = () => {
-    setOpen(false);
+    console.log(`Progress: ${progress * 100}%`);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Question/Answer</Text>
+    // <SafeAreaView>
+        <View style={styles.top}>
+        {/* <View> */}
+        <Text style={styles.header}>Question/Answer</Text>
 
+        {/* </View> */}
       {qa &&
-        qa.map((value, index) => (
-          <View key={index} style={styles.card}>
-            <View style={styles.questionContainer}>
-              <Text style={styles.questionText}>
-                <Text>Q:</Text> {value.qa}
-              </Text>
-            </View>
-            <View style={styles.sliderContainer}>
-              <Text style={styles.progressText}>{tempProgress}%</Text>
+        qa.map((value: any, index: number) => {
+          return (
+            <View style={styles.container} key={index}>
+              <Text style={styles.text}>Q: {value.qa}</Text>
               <Slider
-                minimumValue={0}
-                maximumValue={100}
-                value={tempProgress}
-                onValueChange={handleProgressChange}
                 style={styles.slider}
+                minimumValue={0.01}
+                maximumValue={1}
+                step={0.01}
+                onValueChange={handleProgressChange}
+                value={progress}
+                minimumTrackTintColor="#0e81a8"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="#0e81a8"
               />
+              <Text style={styles.text}>{(progress * 100).toFixed(1)}%</Text>
+              <View style={styles.buttonContainer}>
+                {/* <Button title="Submit" onPress={handleSubmit} style={styles.button}>
+            Submit
+          </Button> */}
+                <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                  <Text style={styles.btntxt}>Submit</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Button
-              title={`Submit (${tempProgress}%)`}
-              onPress={openModal}
-              color="#1976d2"
-            />
-            {open && (
-              <KeepMountedModal
-                isShowing={isShowing}
-                hide={toggle}
-                handleSubmit={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
-              />
-            )}
-          </View>
-        ))}
-    </View>
+          );
+        })}
+        </View>
+    // </SafeAreaView>
   );
 };
 
+export default qa1;
+
 const styles = StyleSheet.create({
+  top: {
+    flex: 1,
+  },
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 40,
+    // backgroundColor: "#F5FCFF",
   },
   header: {
-    backgroundColor: "#8A8A8A",
+    margin:"auto",
     width: "64%",
     textAlign: "center",
-    borderRadius: 10,
-    fontSize: 24,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    color: "white",
-    fontWeight: "bold",
     marginVertical: 20,
+    fontSize:24.13,
+    fontWeight:500,
   },
-  card: {
-    backgroundColor: "white",
-    paddingVertical: 20,
-    paddingHorizontal: 40,
-    textAlign: "center",
-    width: "60%",
-    marginVertical: 10,
-    borderRadius: 10,
-  },
-  questionContainer: {
-    marginBottom: 15,
-    alignItems: "center",
-  },
-  questionText: {
+  text: {
     fontSize: 20,
-  },
-  sliderContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  progressText: {
-    color: "gray",
-    fontSize: 14,
+    marginBottom: 20,
   },
   slider: {
-    flex: 1,
-    marginLeft: 10,
+    width: "80%",
+    height: 40,
+    color: "blue",
+  },
+  buttonContainer: {
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#0e81a8",
+    padding: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
+  btntxt: {
+    fontSize: 14.6,
+    color: "white",
   },
 });
-
-export default QA;
