@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { ModalProvider } from '@/context/Modalprovider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -31,7 +32,9 @@ export default function RootLayout() {
       <Stack>
 
 
+        <ModalProvider>
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title:"" }} />
+        </ModalProvider>
         <Stack.Screen name="(auth)/index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/regester" options={{ headerShown: false }} />
 

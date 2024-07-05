@@ -8,10 +8,15 @@ import {
 import React, { useCallback, useState } from "react";
 import Slider from "@react-native-community/slider";
 import { qa } from "@/constants/qa";
+import Modals from "@/components/Modal";
+import { useModal } from "@/context/Modalprovider";
+// import useModal from "@/hooks/useModal";
 
 const qa1 = () => {
+  // const {setIsShowing,toggle,isShowing} = useModal()
+  const {isModal,setIsModal} = useModal()
   const [progress, setProgress] = useState(0);
-
+  const [modal , setModal] = useState(false)
   const handleProgressChange = (value: any) => {
     if (value < 0) {
       setProgress(0);
@@ -22,7 +27,13 @@ const qa1 = () => {
 
   const handleSubmit = () => {
     console.log(`Progress: ${progress * 100}%`);
+   
+    setIsModal(true)
+    console.log("this is from QA page " , isModal)
+   
   };
+
+
 
   return (
     // <SafeAreaView>
@@ -55,6 +66,10 @@ const qa1 = () => {
                 <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                   <Text style={styles.btntxt}>Submit</Text>
                 </TouchableOpacity>
+              </View>
+              <View>
+
+                  <Modals />
               </View>
             </View>
           );
