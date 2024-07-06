@@ -8,8 +8,13 @@ interface ModalContextType {
   setIsModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const initialValue = {
+  isModal:false,
+  setIsModal : ()=>{},
+}
+
 // Create a context object with initial values
-const ModalContext = createContext<ModalContextType | null >(null);
+const ModalContext = createContext<ModalContextType|null>(null);
 
 // Export the context provider
 export const ModalProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
@@ -24,7 +29,9 @@ export const ModalProvider: React.FC<{ children?: React.ReactNode }> = ({ childr
 
 // Export the context itself for useContext hook usage
 export const useModal = () => {
-  return useContext(ModalContext);
+  const ctx = useContext(ModalContext);
+  if (!ctx) throw new Error('error')
+  return ctx
 };
 
 export default ModalContext;

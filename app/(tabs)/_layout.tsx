@@ -4,11 +4,14 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { ModalProvider } from '@/context/Modalprovider';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <ModalProvider> 
+
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -23,8 +26,9 @@ export default function TabLayout() {
           ),
         }}
       />
+       
       <Tabs.Screen
-        name="qa1"
+        name="qa"
         options={{
           title: 'Q/A',
           tabBarIcon: ({ color, focused }) => (
@@ -33,5 +37,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </ModalProvider> 
+
   );
 }
